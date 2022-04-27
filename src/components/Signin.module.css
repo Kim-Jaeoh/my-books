@@ -64,10 +64,11 @@
 }
 
 .input_area {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 40px;
-  padding-right: 40px;
+  padding: 10px 40px;
+  /* padding-top: 10px; */
+  /* padding-bottom: 10px; */
+  /* padding-left: 40px; */
+  /* padding-right: 40px; */
 }
 
 .input {
@@ -79,14 +80,15 @@
 
 .button_area {
   text-align: center;
-  padding-left: 40px;
-  padding-right: 40px;
+  padding: 0 40px;
+  /* padding-left: 40px; */
+  /* padding-right: 40px; */
   margin-top: 20px;
 }
 
 .button {
   border-color: #28546a;
-  background-color: #28546a;
+  background-color: #1b4458;
   text-transform: uppercase;
   border-radius: 1px;
   border-width: 2px;
@@ -95,6 +97,6 @@
 }
 
 .button:hover {
-  background-color: #28546a;
+  background-color: #112e3d;
   color: white;
 }

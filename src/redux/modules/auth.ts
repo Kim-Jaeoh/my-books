@@ -1,14 +1,10 @@
-import { Action, createActions, handleActions } from "redux-actions";
-import { call, put, takeEvery } from "redux-saga/effects";
-import TokenService from "../../services/TokenService";
+import { Action } from "redux-actions";
+import { createActions, handleActions } from "redux-actions";
+import { call, put, select, takeEvery } from "redux-saga/effects";
+import { AuthState, LoginReqType } from "../../types";
 import UserService from "../../services/UserService";
-import { LoginReqType } from "../../types";
-
-interface AuthState {
-  token: string | null;
-  loading: boolean;
-  error: Error | null;
-}
+import TokenService from "../../services/TokenService";
+import { push } from "connected-react-router";
 
 const initialState: AuthState = {
   token: null,
@@ -32,6 +28,7 @@ const reducer = handleActions<AuthState, string>(
       loading: true,
       error: null,
     }),
+
     SUCCESS: (state, action) => ({
       token: action.payload,
       loading: false,
@@ -56,16 +53,29 @@ function* loginSaga(action: Action<LoginReqType>) {
   try {
     yield put(pending());
     const token: string = yield call(UserService.login, action.payload);
-    // localstorage
+    // 위에서의 action.payload는 Components/Signin에서 받아온 email, password
     TokenService.set(token);
     yield put(success(token));
-    // push
+    yield put(push("/"));
   } catch (error: any) {
     yield put(fail(new Error(error?.response?.data?.error || "Unknown Error")));
+    // console.log(error.response);
   }
 }
 
-function* logoutSaga() {}
+function* logoutSaga() {
+  try {
+    yield put(pending());
+    const token: string = yield select((state) => state.auth.token);
+    yield call(UserService.logout, token);
+    // TokenService.set(token);
+  } catch (error: any) {
+  } finally {
+    TokenService.remove(); // localstorage token
+    yield put(success(null)); // redux token
+    console.log(success());
+  }
+}
 
 export function* authSaga() {
   yield takeEvery(`${prefix}/LOGIN`, loginSaga);
