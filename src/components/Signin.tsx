@@ -1,5 +1,6 @@
 import { Col, Input, Row, Button } from "antd";
 import { useRef } from "react";
+import { login } from "../redux/modules/auth";
 import { LoginReqType } from "../types";
 import styles from "./Signin.module.css";
 
@@ -7,7 +8,9 @@ interface SigninProps {
   login: (reqData: LoginReqType) => void;
 }
 
+// const Signin = (props: SigninProps) => { // FC 없이 하는 props 주는 법
 const Signin: React.FC<SigninProps> = ({ login }) => {
+  // FC로 props 주는 법
   const emailRef = useRef<Input>(null);
   const passwordRef = useRef<Input>(null);
 

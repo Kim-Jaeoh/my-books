@@ -56,7 +56,7 @@ function* loginSaga(action: Action<LoginReqType>) {
     // 위에서의 action.payload는 Components/Signin에서 받아온 email, password
     TokenService.set(token);
     yield put(success(token));
-    yield put(push("/"));
+    // yield put(push("/"));
   } catch (error: any) {
     yield put(fail(new Error(error?.response?.data?.error || "Unknown Error")));
     // console.log(error.response);

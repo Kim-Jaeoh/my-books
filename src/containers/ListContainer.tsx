@@ -1,6 +1,12 @@
-import { useSelector } from "react-redux";
+import { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import List from "../components/List";
 import { BookType, RootState } from "../types";
+import {
+  getBooks as getBooksSagaStart,
+  deleteBook as deleteBookSagaStart,
+} from "../redux/modules/books";
+import { logout as logoutSagaStart } from "../redux/modules/auth";
 
 export default function ListContainer() {
   const books = useSelector<RootState, BookType[] | null>(
@@ -9,5 +15,45 @@ export default function ListContainer() {
   const loading = useSelector<RootState, boolean>(
     (state) => state.books.loading
   );
-  return <List books={books} loading={loading} />;
+
+  const error = useSelector<RootState, Error | null>(
+    (state) => state.books.error
+  );
+
+  const dispatch = useDispatch();
+
+  const getBooks = useCallback(() => {
+    dispatch(getBooksSagaStart());
+  }, [dispatch]);
+
+  const logout = useCallback(() => {
+    dispatch(logoutSagaStart());
+  }, [dispatch]);
+
+  const goAdd = useCallback(() => {
+    // dispatch(push("/add"));
+    window.location.replace("/add");
+    // return <Navigate to="/add" />;
+  }, []);
+
+  const deleteBook = useCallback(
+    (bookId: number) => {
+      dispatch(deleteBookSagaStart(bookId));
+      // window.location.replace("/add");
+      // return <Navigate to="/add" />;
+    },
+    [dispatch]
+  );
+
+  return (
+    <List
+      books={books}
+      loading={loading}
+      getBooks={getBooks}
+      error={error}
+      logout={logout}
+      goAdd={goAdd}
+      deleteBook={deleteBook}
+    />
+  );
 }
